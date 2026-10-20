@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ترکیب گزاره‌های منطقی با ایموجی</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;700&display=swap');
+
+        :root {
+            --bg-turquoise: #e0f7fa;
+            --card-white: #ffffff;
+            --glow-teal: #26a69a;
+            --text-dark: #004d40;
+            --accent-teal: #00838f;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: var(--bg-turquoise);
+            background-image: 
+                linear-gradient(#b2ebf2 1px, transparent 1px),
+                linear-gradient(90deg, #b2ebf2 1px, transparent 1px);
+            background-size: 25px 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-dark);
+            padding: 10px;
+        }
+
+        #app {
+            background-color: var(--card-white);
+            width: 100%;
+            max-width: 600px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 131, 143, 0.2);
+            padding: 20px;
+            position: relative;
+            max-height: 92vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #app::-webkit-scrollbar {
+            width: 6px;
+        }
+        #app::-webkit-scrollbar-thumb {
+            background: var(--glow-teal);
+            border-radius: 10px;
+        }
+
+        .page {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            flex-grow: 1;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .page.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--glow-teal);
+            text-align: center;
+        }
+
+        p {
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .glowing-box {
+            background-color: var(--glow-teal);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 15px rgba(38, 166, 154, 0.5);
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .btn {
+            background-color: var(--accent-teal);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-family: 'Vazirmatn', sans-serif;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: auto;
+            align-self: center;
+            width: 100%;
+            max-width: 250px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn:hover {
+            background-color: #006064;
+            transform: translateY(-2px);
+        }
+
+        /* طراحی صورتک بزرگ با لب ترسیمی */
+        .big-face {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            margin: 15px auto 25px auto;
+            border: 4px solid var(--glow-teal);
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0 0 20px rgba(38, 166, 154, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .face-eyes {
+            display: flex;
+            gap: 35px;
+            margin-top: 10px;
+        }
+
+        .face-eye {
+            font-size: 2.8rem;
+            line-height: 1;
+        }
+
+        .face-nose {
+            font-size: 3.5rem; /* بینی بزرگتر */
+            color: var(--glow-teal);
+            font-weight: bold;
+            margin-top: 5px;
+            line-height: 1;
+        }
+
+        /* لب خندان */
+        .mouth-smile {
+            width: 80px;
+            height: 35px;
+            border-bottom: 6px solid var(--glow-teal);
+            border-radius: 0 0 80px 80px;
+            margin-top: 5px;
+        }
+
+        /* لب ناراحت */
+        .mouth-sad {
+            width: 80px;
+            height: 35px;
+            border-top: 6px solid var(--glow-teal);
+            border-radius: 80px 80px 0 0;
+            margin-top: 45px; /* جابجایی برای قرارگیری درست */
+        }
+
+        /* استایل‌های آزمون و صفحه دوشرطی */
+        .bi-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .bi-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            font-size: 2.5rem;
+            direction: ltr;
+            background: #f0fdfa;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px dashed var(--glow-teal);
+        }
+
+        .bi-status {
+            font-size: 2.5rem;
+            line-height: 1;
+        }
+
+        .operator-symbol {
+            font-size: 1.8rem;
+            color: var(--glow-teal);
+            font-weight: bold;
+        }
+
+        .quiz-question {
+            margin-bottom: 15px;
+            background: #f0fdfa;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #b2dfdb;
+        }
+        
+        .quiz-question p {
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            text-align: right;
+        }
+
+        .options label {
+            display: block;
+            margin-bottom: 5px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 6px;
+            transition: background 0.2s;
+            font-size: 0.9rem;
+            background: white;
+            border: 1px solid #e0e0e0;
+        }
+
+        .options label:hover {
+            background-color: #b2dfdb;
+        }
+
+        .options input[type="radio"] {
+            margin-left: 8px;
+            transform: scale(1.1);
+        }
+
+        #result {
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .correct-res {
+            background-color: #d1fae5;
+            color: #065f46;
+            border: 2px solid #10b981;
+        }
+
+        .wrong-res {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border: 2px solid #ef4444;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .nav-buttons .btn {
+            margin-top: 0;
+            font-size: 0.9rem;
+            padding: 10px;
+        }
+
+        .btn-secondary {
+            background-color: #78909c;
+        }
+
+        .btn-secondary:hover {
+            background-color: #546e7a;
+        }
+
+        /* پخش‌کننده موسیقی */
+        .music-player {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1000;
+            background: white;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            cursor: pointer;
+            border: 2px solid var(--glow-teal);
+            font-size: 1.2rem;
+        }
+
+        /* انیمیشن بارش ایموجی */
+        .falling-emoji {
+            position: fixed;
+            top: -50px;
+            font-size: 2rem;
+            z-index: 999;
+            animation: fall linear forwards;
+            pointer-events: none;
+        }
+
+        @keyframes fall {
+            to { transform: translateY(110vh) rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="music-player" onclick="toggleMusic()" id="musicBtn">🎵</div>
+    <!-- لینک آهنگ آرام و مستقیم از ویکی‌مدیا (نوکتورن شوپن) -->
+    <audio id="bgMusic" loop>
+        <source src="https://upload.wikimedia.org/wikipedia/commons/transcoded/e/e2/Chopin_-_Nocturne_in_E-flat_major%2C_Op._9_No._2.ogg/Chopin_-_Nocturne_in_E-flat_major%2C_Op._9_No._2.ogg.mp3" type="audio/mpeg">
+        مرورگر شما از پخش این فایل صوتی پشتیبانی نمی‌کند.
+    </audio>
+
+    <div id="app">
+        <!-- صفحه 1: معرفی -->
+        <div class="page active" id="page-intro">
+            <h1>ترکیب گزاره‌های منطقی</h1>
+            <div class="glowing-box">
+                <p><strong>گزاره:</strong> جمله‌ای خبری است که می‌توان به آن ارزش «درست» یا «نادرست» نسبت داد.</p>
+                <p>در این درس، فقط <strong>موارد استثنا</strong> (حالت‌های خاص) را با کمک ایموجی‌ها بررسی می‌کنیم.</p>
+            </div>
+            <p style="text-align: center;">رفیعی هستم. آماده‌ای؟ بیا شروع کنیم! 🚀</p>
+            <button class="btn" onclick="nextPage('page-and')">ادامه یادگیری ←</button>
+        </div>
+
+        <!-- صفحه 2: ترکیب عطفی -->
+        <div class="page" id="page-and">
+            <h1>ترکیب عطفی (AND) ∧</h1>
+            <p>ترکیب عطفی دو گزاره معمولاً <strong>نادرست</strong> است، مگر در یک حالت استثنا!</p>
+            
+            <div class="glowing-box">
+                <strong>قانون استثنا:</strong> ترکیب عطفی فقط و فقط زمانی <strong>درست</strong> است که <strong>هر دو گزاره درست</strong> باشند.
+            </div>
+            
+            <div class="big-face">
+                <div class="face-eyes">
+                    <span class="face-eye">😀</span>
+                    <span class="face-eye">😀</span>
+                </div>
+                <div class="face-nose">∧</div>
+                <div class="mouth-smile"></div> <!-- لب خندان ترسیمی -->
+            </div>
+            <p style="text-align: center; font-size: 0.9rem; color: #00838f;">(اگر حتی یکی از چشم‌ها ناراحت 😢 باشد، لبخند به اخم تبدیل می‌شود)</p>
+
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="nextPage('page-intro')">→ قبلی</button>
+                <button class="btn" onclick="nextPage('page-or')">بعدی ←</button>
+            </div>
+        </div>
+
+        <!-- صفحه 3: ترکیب فصلی -->
+        <div class="page" id="page-or">
+            <h1>ترکیب فصلی (OR) ∨</h1>
+            <p>ترکیب فصلی دو گزاره معمولاً <strong>درست</strong> است، مگر در یک حالت استثنا!</p>
+            
+            <div class="glowing-box">
+                <strong>قانون استثنا:</strong> ترکیب فصلی فقط و فقط زمانی <strong>نادرست</strong> است که <strong>هر دو گزاره نادرست</strong> باشند.
+            </div>
+            
+            <div class="big-face">
+                <div class="face-eyes">
+                    <span class="face-eye">😢</span>
+                    <span class="face-eye">😢</span>
+                </div>
+                <div class="face-nose">∨</div>
+                <div class="mouth-sad"></div> <!-- لب ناراحت ترسیمی -->
+            </div>
+            <p style="text-align: center; font-size: 0.9rem; color: #00838f;">(اگر حتی یکی از چشم‌ها خندان 😀 باشد، لبخند برمی‌گردد)</p>
+
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="nextPage('page-and')">→ قبلی</button>
+                <button class="btn" onclick="nextPage('page-conditional')">بعدی ←</button>
+            </div>
+        </div>
+
+        <!-- صفحه 4: ترکیب شرطی -->
+        <div class="page" id="page-conditional">
+            <h1>ترکیب شرطی (اگر... آنگاه) →</h1>
+            <p>ترکیب شرطی معمولاً <strong>درست</strong> است، مگر در یک حالت استثنا!</p>
+            
+            <div class="glowing-box">
+                <strong>قانون استثنا:</strong> ترکیب شرطی فقط در یک حالت <strong>نادرست</strong> است: <strong>مقدم درست باشد و تالی نادرست</strong>. (آدم خوب به سمت کار بد برود!).
+            </div>
+            
+            <div class="bi-row">
+                <span class="bi-status">😀</span>
+                <span class="operator-symbol">→</span>
+                <span class="bi-status">😢</span>
+                <span class="operator-symbol">=</span>
+                <span class="bi-status">😢</span>
+            </div>
+            <p style="text-align: center; font-size: 0.9rem; color: #00838f;">(در سایر حالت‌ها، حتی اگر مقدم نادرست باشد، کل جمله درست 😀 در نظر گرفته می‌شود)</p>
+
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="nextPage('page-or')">→ قبلی</button>
+                <button class="btn" onclick="nextPage('page-biconditional')">بعدی ←</button>
+            </div>
+        </div>
+
+        <!-- صفحه 5: ترکیب دو شرطی -->
+        <div class="page" id="page-biconditional">
+            <h1>ترکیب دو شرطی (↔)</h1>
+            <p>ترکیب دو شرطی معمولاً <strong>درست</strong> است، مگر در حالت استثنا!</p>
+            
+            <div class="glowing-box">
+                <strong>قانون استثنا:</strong> ترکیب دو شرطی زمانی <strong>نادرست</strong> است که <strong>دو گزاره هم‌ارزش نباشند</strong> (یکی درست و یکی نادرست). "کبوتر با کبوتر، باز با باز"!
+            </div>
+            
+            <div class="bi-container">
+                <!-- حالت دو منفی (نادرست) -->
+                <div class="bi-row">
+                    <span class="bi-status">❌</span>
+                    <span class="operator-symbol">↔</span>
+                    <span class="bi-status">❌</span>
+                    <span class="operator-symbol">=</span>
+                    <span class="bi-status">✔️</span>
+                </div>
+                <!-- حالت دو مثبت (درست) -->
+                <div class="bi-row">
+                    <span class="bi-status">✔️</span>
+                    <span class="operator-symbol">↔</span>
+                    <span class="bi-status">✔️</span>
+                    <span class="operator-symbol">=</span>
+                    <span class="bi-status">✔️</span>
+                </div>
+            </div>
+            <p style="text-align: center; font-size: 0.9rem; color: #00838f;">(هم‌ارزش بودن یعنی هر دو منفی ❌ یا هر دو مثبت ✔️ باشند. برای ارزش درست از تیک سبز ✔️ استفاده شده است)</p>
+
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="nextPage('page-conditional')">→ قبلی</button>
+                <button class="btn" onclick="nextPage('page-quiz')">شروع آزمون 📝</button>
+            </div>
+        </div>
+
+        <!-- صفحه 6: آزمون -->
+        <div class="page" id="page-quiz">
+            <h1>آزمون نهایی 🎯</h1>
+            <p style="text-align: center;">به سوالات زیر پاسخ دهید:</p>
+            
+            <form id="quizForm">
+                <div class="quiz-question">
+                    <p>۱. استثنای ترکیب عطفی (AND) چیست؟</p>
+                    <div class="options">
+                        <label><input type="radio" name="q1" value="true"> زمانی که هر دو گزاره درست باشند.</label>
+                        <label><input type="radio" name="q1" value="false"> زمانی که هر دو گزاره نادرست باشند.</label>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <p>۲. استثنای ترکیب فصلی (OR) چیست؟</p>
+                    <div class="options">
+                        <label><input type="radio" name="q2" value="true"> زمانی که هر دو گزاره نادرست باشند.</label>
+                        <label><input type="radio" name="q2" value="false"> زمانی که یکی درست و یکی نادرست باشد.</label>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <p>۳. استثنای ترکیب شرطی (→) چیست؟</p>
+                    <div class="options">
+                        <label><input type="radio" name="q3" value="false"> زمانی که مقدم نادرست باشد.</label>
+                        <label><input type="radio" name="q3" value="true"> زمانی که مقدم درست و تالی نادرست باشد.</label>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <p>۴. استثنای ترکیب دو شرطی (↔) چیست؟</p>
+                    <div class="options">
+                        <label><input type="radio" name="q4" value="true"> زمانی که دو گزاره هم‌ارزش نباشند.</label>
+                        <label><input type="radio" name="q4" value="false"> زمانی که هر دو گزاره نادرست باشند.</label>
+                    </div>
+                </div>
+
+                <button type="button" class="btn" onclick="checkQuiz()">ثبت پاسخ‌ها ✅</button>
+            </form>
+
+            <div id="result"></div>
+            
+            <div class="nav-buttons" style="margin-top: 15px;">
+                <button class="btn btn-secondary" onclick="nextPage('page-biconditional')">→ بازگشت به درس</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isPlaying = false;
+        const audio = document.getElementById('bgMusic');
+        const musicBtn = document.getElementById('musicBtn');
+
+        function toggleMusic() {
+            if (isPlaying) {
+                audio.pause();
+                musicBtn.innerText = '🎵';
+            } else {
+                // پخش آهنگ (نیاز به کلیک کاربر دارد)
+                audio.play().then(() => {
+                    musicBtn.innerText = '🔇';
+                }).catch(e => {
+                    console.log("پخش خودکار مسدود شد. کاربر باید تعامل داشته باشد.");
+                    alert("برای پخش موسیقی، لطفاً دوباره روی دکمه موزیک کلیک کنید.");
+                });
+            }
+            isPlaying = !isPlaying;
+        }
+
+        function nextPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+            document.getElementById('app').scrollTop = 0;
+        }
+
+        function checkQuiz() {
+            const q1 = document.querySelector('input[name="q1"]:checked');
+            const q2 = document.querySelector('input[name="q2"]:checked');
+            const q3 = document.querySelector('input[name="q3"]:checked');
+            const q4 = document.querySelector('input[name="q4"]:checked');
+
+            if (!q1 || !q2 || !q3 || !q4) {
+                alert("لطفاً به همه سوالات پاسخ دهید!");
+                return;
+            }
+
+            let score = 0;
+            if (q1.value === "true") score++;
+            if (q2.value === "true") score++;
+            if (q3.value === "true") score++;
+            if (q4.value === "true") score++;
+
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+
+            if (score === 4) {
+                resultDiv.className = 'correct-res';
+                resultDiv.innerHTML = '🎉 عالی بود! تمام پاسخ‌ها صحیح است. 🎉';
+                createFallingEmojis(['🎉', '🌟', '😍', '👏', '✨', '🥳']);
+            } else {
+                resultDiv.className = 'wrong-res';
+                resultDiv.innerHTML = `😞 متأسفانه پاسخ‌های شما کامل نبود. شما به ${score} سوال از ۴ سوال درست پاسخ دادید. دوباره تلاش کنید!`;
+                createFallingEmojis(['😢', '😞', '💔', '☹️', '😭']);
+            }
+        }
+
+        function createFallingEmojis(emojiList) {
+            for (let i = 0; i < 50; i++) {
+                const el = document.createElement('div');
+                el.classList.add('falling-emoji');
+                el.innerText = emojiList[Math.floor(Math.random() * emojiList.length)];
+                el.style.left = Math.random() * 100 + 'vw';
+                el.style.fontSize = (Math.random() * 1.5 + 1.5) + 'rem';
+                el.style.animationDuration = (Math.random() * 2 + 1.5) + 's';
+                el.style.animationDelay = Math.random() * 0.5 + 's';
+                document.body.appendChild(el);
+                
+                setTimeout(() => {
+                    el.remove();
+                }, 4000);
+            }
+        }
+    </script>
+</body>
+</html>
